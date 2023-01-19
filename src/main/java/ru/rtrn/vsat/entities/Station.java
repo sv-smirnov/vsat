@@ -9,5 +9,6 @@ public class Station {
     String name;
     String ip;
     String value;
+    String rele;
     String status;
 }

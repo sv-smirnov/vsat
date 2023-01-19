@@ -37,7 +37,16 @@ public class SnmpSevice {
         device = new Vsat();
     }
 
-    public String snmpGet(String ip){
+    public SnmpSevice(Device device) throws IOException {
+        transport = new DefaultUdpTransportMapping();
+        snmp = new Snmp(transport);
+        transport.listen();
+        target = new CommunityTarget();
+        PDU responsePDU = null;
+        this.device = device;
+    }
+
+    public String snmpGet(String ip) {
         String value = "";
         try {
             Address address = new UdpAddress(ip + "/" + device.getPort());
@@ -62,15 +71,15 @@ public class SnmpSevice {
                         value = responsePDU.getVariable(oid).toString();
 //                        log.info("GET RESPONSE: " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - " + target.getAddress() + " - " + responsePDU.getVariableBindings());
                     } else {
-                        value =  errorStatusText;
+                        value = errorStatusText;
 //                        log.error("GET RESPONSE: " + target.getAddress() + " - " + errorStatusText);
                     }
                 } else {
-                    value =  "Error: Response PDU is null";
+                    value = "Error: Response PDU is null";
 //                    log.error("GET RESPONSE: " + target.getAddress() + " - " + "Response PDU is null");
                 }
             } else {
-                value =  "Error: Agent Timeout... ";
+                value = "Error: Agent Timeout... ";
 //                log.error("GET RESPONSE: " + target.getAddress() + " - " + "Agent Timeout... ");
             }
         } catch (IOException ee) {
@@ -83,7 +92,7 @@ public class SnmpSevice {
         return value;
     }
 
-    public boolean checkValue(String value){
+    public boolean checkValue(String value) {
         String regex = "^[0-9,.]+$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
@@ -92,6 +101,53 @@ public class SnmpSevice {
 
     public void snmpClose() throws IOException {
         snmp.close();
+    }
+
+    public String snmpSet(String ip, int newValue) {
+        String value = "";
+        try {
+            Address address = new UdpAddress(ip + "/" + device.getPort());
+            target.setCommunity(new OctetString(device.getCommunity()));
+            target.setAddress(address);
+            target.setRetries(retries);
+            target.setTimeout(timeout);
+            target.setVersion(version);
+            OID oid = new OID(device.getOid());
+            PDU request = new PDU();
+            request.setType(PDU.SET);
+            Variable var = new Integer32(newValue);
+            request.add(new VariableBinding(oid, var));
+            responsePDU = null;
+//            log.info("GET REQUEST : " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - "+ target.getAddress() + " - " + oid);
+            ResponseEvent responseEvent = snmp.send(request, target);
+            if (responseEvent != null) {
+                responsePDU = responseEvent.getResponse();
+                if (responsePDU != null) {
+                    int errorStatus = responsePDU.getErrorStatus();
+                    String errorStatusText = responsePDU.getErrorStatusText();
+                    if (errorStatus == PDU.noError) {
+                        value = responsePDU.getVariable(oid).toString();
+//                        log.info("SET RESPONSE: " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - " + target.getAddress() + " - " + responsePDU.getVariableBindings());
+                    } else {
+                        value = errorStatusText;
+//                        log.error("SET RESPONSE: " + target.getAddress() + " - " + errorStatusText);
+                    }
+                } else {
+                    value = "Error: Response PDU is null";
+//                    log.error("SET RESPONSE: " + target.getAddress() + " - " + "Response PDU is null");
+                }
+            } else {
+                value = "Error: Agent Timeout... ";
+//                log.error("SET RESPONSE: " + target.getAddress() + " - " + "Agent Timeout... ");
+            }
+        } catch (IOException ee) {
+            ee.printStackTrace();
+        }
+
+        if (checkValue(value)) {
+            value = String.valueOf(Double.parseDouble(value) / 100);
+        }
+        return value;
     }
 
 }

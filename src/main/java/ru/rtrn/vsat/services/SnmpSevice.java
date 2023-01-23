@@ -10,7 +10,6 @@ import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.springframework.stereotype.Service;
 import ru.rtrn.vsat.entities.Device;
-import ru.rtrn.vsat.entities.Vsat;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -25,32 +24,20 @@ public class SnmpSevice {
     private Snmp snmp;
     private CommunityTarget target;
     private PDU responsePDU;
-    private Device device;
-
 
     public SnmpSevice() throws IOException {
         transport = new DefaultUdpTransportMapping();
         snmp = new Snmp(transport);
         transport.listen();
         target = new CommunityTarget();
-        PDU responsePDU = null;
-        device = new Vsat();
+        responsePDU = null;
     }
 
-    public SnmpSevice(Device device) throws IOException {
-        transport = new DefaultUdpTransportMapping();
-        snmp = new Snmp(transport);
-        transport.listen();
-        target = new CommunityTarget();
-        PDU responsePDU = null;
-        this.device = device;
-    }
-
-    public String snmpGet(String ip) {
+    public String snmpGet(Device device, String ip) {
         String value = "";
         try {
             Address address = new UdpAddress(ip + "/" + device.getPort());
-            target.setCommunity(new OctetString(device.getCommunity()));
+            target.setCommunity(new OctetString(device.getGetCommunity()));
             target.setAddress(address);
             target.setRetries(retries);
             target.setTimeout(timeout);
@@ -93,7 +80,7 @@ public class SnmpSevice {
     }
 
     public boolean checkValue(String value) {
-        String regex = "^[0-9,.]+$";
+        String regex = "^[0-9,.]{2,}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
@@ -103,11 +90,11 @@ public class SnmpSevice {
         snmp.close();
     }
 
-    public String snmpSet(String ip, int newValue) {
+    public String snmpSet(Device device, String ip, int newValue) {
         String value = "";
         try {
             Address address = new UdpAddress(ip + "/" + device.getPort());
-            target.setCommunity(new OctetString(device.getCommunity()));
+            target.setCommunity(new OctetString(device.getSetCommunity()));
             target.setAddress(address);
             target.setRetries(retries);
             target.setTimeout(timeout);

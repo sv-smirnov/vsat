@@ -47,7 +47,6 @@ public class SnmpSevice {
             request.setType(PDU.GET);
             request.add(new VariableBinding(oid));
             responsePDU = null;
-//            log.info("GET REQUEST : " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - "+ target.getAddress() + " - " + oid);
             ResponseEvent responseEvent = snmp.send(request, target);
             if (responseEvent != null) {
                 responsePDU = responseEvent.getResponse();
@@ -56,18 +55,14 @@ public class SnmpSevice {
                     String errorStatusText = responsePDU.getErrorStatusText();
                     if (errorStatus == PDU.noError) {
                         value = responsePDU.getVariable(oid).toString();
-//                        log.info("GET RESPONSE: " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - " + target.getAddress() + " - " + responsePDU.getVariableBindings());
                     } else {
                         value = errorStatusText;
-//                        log.error("GET RESPONSE: " + target.getAddress() + " - " + errorStatusText);
                     }
                 } else {
                     value = "Error: Response PDU is null";
-//                    log.error("GET RESPONSE: " + target.getAddress() + " - " + "Response PDU is null");
                 }
             } else {
                 value = "Error: Agent Timeout... ";
-//                log.error("GET RESPONSE: " + target.getAddress() + " - " + "Agent Timeout... ");
             }
         } catch (IOException ee) {
             ee.printStackTrace();
@@ -105,7 +100,6 @@ public class SnmpSevice {
             Variable var = new Integer32(newValue);
             request.add(new VariableBinding(oid, var));
             responsePDU = null;
-//            log.info("GET REQUEST : " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - "+ target.getAddress() + " - " + oid);
             ResponseEvent responseEvent = snmp.send(request, target);
             if (responseEvent != null) {
                 responsePDU = responseEvent.getResponse();
@@ -114,18 +108,15 @@ public class SnmpSevice {
                     String errorStatusText = responsePDU.getErrorStatusText();
                     if (errorStatus == PDU.noError) {
                         value = responsePDU.getVariable(oid).toString();
-//                        log.info("SET RESPONSE: " + selectedStation.getName() + "/" + selectedDevice.getClass().getSimpleName() + " - " + target.getAddress() + " - " + responsePDU.getVariableBindings());
                     } else {
                         value = errorStatusText;
 //                        log.error("SET RESPONSE: " + target.getAddress() + " - " + errorStatusText);
                     }
                 } else {
                     value = "Error: Response PDU is null";
-//                    log.error("SET RESPONSE: " + target.getAddress() + " - " + "Response PDU is null");
                 }
             } else {
                 value = "Error: Agent Timeout... ";
-//                log.error("SET RESPONSE: " + target.getAddress() + " - " + "Agent Timeout... ");
             }
         } catch (IOException ee) {
             ee.printStackTrace();

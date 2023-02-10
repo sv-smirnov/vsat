@@ -43,39 +43,20 @@ public class StationService {
     }
 
     public void startUpdate() throws IOException {
-        ExecutorService threadPool = Executors.newFixedThreadPool(11);
+        int n = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(n);
+        int dN = stations.size() / n;
+        int dNR = stations.size() % n;
+
+        for(int i = 0; i < n - 1; i++) {
+            int start = i;
+            int stop = i + 1;
+            threadPool.submit(() -> {
+                updateValue(start*dN,stop*dN);
+            });
+        }
         threadPool.submit(() -> {
-            updateValue(0, 20);
-        });
-        threadPool.submit(() -> {
-            updateValue(20, 40);
-        });
-        threadPool.submit(() -> {
-            updateValue(40, 60);
-        });
-        threadPool.submit(() -> {
-            updateValue(60, 80);
-        });
-        threadPool.submit(() -> {
-            updateValue(80, 100);
-        });
-        threadPool.submit(() -> {
-            updateValue(100, 120);
-        });
-        threadPool.submit(() -> {
-            updateValue(120, 140);
-        });
-        threadPool.submit(() -> {
-            updateValue(140, 160);
-        });
-        threadPool.submit(() -> {
-            updateValue(160, 180);
-        });
-        threadPool.submit(() -> {
-            updateValue(180, 200);
-        });
-        threadPool.submit(() -> {
-            updateValue(200, 216);
+            updateValue((n-1)*dN,((n)*dN+dNR));
         });
     }
 

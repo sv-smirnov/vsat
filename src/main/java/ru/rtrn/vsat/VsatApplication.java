@@ -1,7 +1,10 @@
 package ru.rtrn.vsat;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.Bean;
+import ru.rtrn.vsat.gui.Gui;
 
 @SpringBootApplication
 public class VsatApplication {
@@ -11,6 +14,12 @@ public class VsatApplication {
         new SpringApplicationBuilder(VsatApplication.class)
                 .headless (false)
                 .run (args);
+    }
+
+
+    @Bean
+    public Gui gui() {
+        return new Gui();
     }
 
 }

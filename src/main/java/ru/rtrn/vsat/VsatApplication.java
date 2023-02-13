@@ -17,9 +17,9 @@ public class VsatApplication {
     }
 
 
-    @Bean
-    public Gui gui() {
-        return new Gui();
-    }
+
+//    public Gui gui() {
+//        return new Gui();
+//    }
 
 }

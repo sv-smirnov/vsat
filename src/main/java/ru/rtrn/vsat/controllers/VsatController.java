@@ -14,8 +14,6 @@ import ru.rtrn.vsat.services.StationService;
 
 import java.io.IOException;
 
-
-
 @Controller
 @RequiredArgsConstructor
 public class VsatController {

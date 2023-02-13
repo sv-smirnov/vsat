@@ -17,8 +17,6 @@ import java.util.concurrent.Executors;
 @Service
 public class StationService {
 
-
-
     ArrayList<Station> stations;
     Logger log = LoggerFactory.getLogger(StationService.class);
 
@@ -50,16 +48,16 @@ public class StationService {
         int dN = stations.size() / n;
         int dNR = stations.size() % n;
 
-//        for(int i = 0; i < n - 1; i++) {
-//            int start = i;
-//            int stop = i + 1;
-//            threadPool.submit(() -> {
-//                updateValue(start*dN,stop*dN);
-//            });
-//        }
-//        threadPool.submit(() -> {
-//            updateValue((n-1)*dN,((n)*dN+dNR));
-//        });
+        for (int i = 0; i < n - 1; i++) {
+            int start = i;
+            int stop = i + 1;
+            threadPool.submit(() -> {
+                updateValue(start * dN, stop * dN);
+            });
+        }
+        threadPool.submit(() -> {
+            updateValue((n - 1) * dN, ((n) * dN + dNR));
+        });
     }
 
     private void updateValue(int start, int stop) {

@@ -17,6 +17,8 @@ import java.util.concurrent.Executors;
 @Service
 public class StationService {
 
+
+
     ArrayList<Station> stations;
     Logger log = LoggerFactory.getLogger(StationService.class);
 
@@ -37,46 +39,27 @@ public class StationService {
         String line = reader.readLine();
         while (line != null) {
             String[] split = line.split(" ");
-            stations.add(new Station(split[0], split[1], " ", " ", " "));
+            stations.add(new Station(split[0], split[1], split[2], " ", " ", " "));
             line = reader.readLine();
         }
     }
 
     public void startUpdate() throws IOException {
-        ExecutorService threadPool = Executors.newFixedThreadPool(11);
-        threadPool.submit(() -> {
-            updateValue(0, 20);
-        });
-        threadPool.submit(() -> {
-            updateValue(20, 40);
-        });
-        threadPool.submit(() -> {
-            updateValue(40, 60);
-        });
-        threadPool.submit(() -> {
-            updateValue(60, 80);
-        });
-        threadPool.submit(() -> {
-            updateValue(80, 100);
-        });
-        threadPool.submit(() -> {
-            updateValue(100, 120);
-        });
-        threadPool.submit(() -> {
-            updateValue(120, 140);
-        });
-        threadPool.submit(() -> {
-            updateValue(140, 160);
-        });
-        threadPool.submit(() -> {
-            updateValue(160, 180);
-        });
-        threadPool.submit(() -> {
-            updateValue(180, 200);
-        });
-        threadPool.submit(() -> {
-            updateValue(200, 216);
-        });
+        int n = 10;
+        ExecutorService threadPool = Executors.newFixedThreadPool(n);
+        int dN = stations.size() / n;
+        int dNR = stations.size() % n;
+
+//        for(int i = 0; i < n - 1; i++) {
+//            int start = i;
+//            int stop = i + 1;
+//            threadPool.submit(() -> {
+//                updateValue(start*dN,stop*dN);
+//            });
+//        }
+//        threadPool.submit(() -> {
+//            updateValue((n-1)*dN,((n)*dN+dNR));
+//        });
     }
 
     private void updateValue(int start, int stop) {
@@ -110,6 +93,8 @@ public class StationService {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -117,24 +102,23 @@ public class StationService {
         return stations;
     }
 
-    public void startWashing(Station alarmStation) {
+    public void startWashing(Station alarmStation) throws InterruptedException {
+        final SnmpSevice[] snmpSeviceSdk = new SnmpSevice[1];
         Thread washProcess = new Thread(() -> {
             try {
-                SnmpSevice snmpSeviceSdk = new SnmpSevice();
+                snmpSeviceSdk[0] = new SnmpSevice();
                 Device sdk = new Sdk();
                 String newIp = alarmStation.getIp().substring(0, alarmStation.getIp().length() - 1) + "2";
-                String releStatus = snmpSeviceSdk.snmpGet(sdk, newIp);
+                String releStatus = snmpSeviceSdk[0].snmpGet(sdk, newIp);
                 if (releStatus.equals("0")) {
-                    releStatus = snmpSeviceSdk.snmpSet(sdk, newIp, 1);
-                    log.info(alarmStation.getIp() + " - " + alarmStation.getValue() + ": start washing");
-                    alarmStation.setRele(parseReleStatus(releStatus));
+
+                    washing(alarmStation, snmpSeviceSdk[0], sdk, newIp, 1, ": start washing");
                     Thread.sleep(20000);
-                    releStatus = snmpSeviceSdk.snmpSet(sdk, newIp, 0);
-                    log.info(alarmStation.getIp() + " - " + alarmStation.getValue() + " - stop washing");
-                    alarmStation.setRele(parseReleStatus(releStatus));
+                    washing(alarmStation, snmpSeviceSdk[0], sdk, newIp, 0, ": stop washing");
                     Thread.sleep(120000);
+
                 } else {
-                    releStatus = snmpSeviceSdk.snmpSet(sdk, newIp, 0);
+                    releStatus = snmpSeviceSdk[0].snmpSet(sdk, newIp, 0);
                     alarmStation.setRele(parseReleStatus(releStatus));
                 }
             } catch (IOException | InterruptedException e) {
@@ -142,10 +126,23 @@ public class StationService {
             } finally {
                 log.info(alarmStation.getIp() + " - " + alarmStation.getValue() + ": finish washing");
                 alarmStation.setStatus("Ready");
-                Thread.currentThread().stop();
+                try {
+                    snmpSeviceSdk[0].snmpClose();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Thread.currentThread().interrupt();
             }
         });
         washProcess.start();
+        washProcess.join();
+    }
+
+    private void washing(Station alarmStation, SnmpSevice snmpSeviceSdk, Device sdk, String newIp, int releValue, String logInfo) throws InterruptedException {
+        String releStatus;
+        releStatus = snmpSeviceSdk.snmpSet(sdk, newIp, releValue);
+        log.info(alarmStation.getIp() + " - " + alarmStation.getValue() + logInfo);
+        alarmStation.setRele(parseReleStatus(releStatus));
     }
 
     public String parseReleStatus(String val) {

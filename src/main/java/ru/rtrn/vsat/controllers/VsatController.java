@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.rtrn.vsat.httpReq.SimpleRequest;
 import ru.rtrn.vsat.services.SnmpSevice;
 import ru.rtrn.vsat.services.StationService;
-import ru.rtrn.vsat.entities.Station;
 
 import java.io.IOException;
-import java.util.Map;
 
 
 
@@ -32,13 +30,6 @@ public class VsatController {
     public String getStations(Model uiModel) throws IOException {
         uiModel.addAttribute("stations", stationService.getStations());
         return "index";
-    }
-
-    @CrossOrigin
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public Map<String, Station> getAll() {
-        
-        return stationService.getMapStations();
     }
 
 }

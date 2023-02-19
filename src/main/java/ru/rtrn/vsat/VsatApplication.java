@@ -16,10 +16,4 @@ public class VsatApplication {
                 .run (args);
     }
 
-
-
-//    public Gui gui() {
-//        return new Gui();
-//    }
-
 }

@@ -2,6 +2,7 @@ package ru.rtrn.vsat.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import ru.rtrn.vsat.services.SnmpSevice;
 
 import java.awt.*;
@@ -9,12 +10,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+
 @Component
 public class Gui {
 
     @Autowired
     private SnmpSevice snmpSevice;
-
     public TrayIcon trayIcon;
 
     public Gui() {
@@ -24,9 +25,12 @@ public class Gui {
             trayIcon = new TrayIcon(image, "VSAT monitoring");
             trayIcon.setImageAutoSize(true);
             trayIcon.setToolTip("VSAT monitoring");
+        
             tray.add(trayIcon);
+
             setMenu();
         } catch (AWTException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

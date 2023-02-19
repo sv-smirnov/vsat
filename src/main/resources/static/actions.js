@@ -1,70 +1,91 @@
-// let mountains = [
-//     { name: "Monte Falco", height: 1658, place: "Parco Foreste Casentinesi" },
-//     { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
-//     { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
-//     { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
-//     { name: "Monte Amiata", height: 1738, place: "Siena" }
-//   ];
+const cardRow = document.getElementById("Stations");
 
-// function generateTableHead(table, data) {
-//     let thead = table.createTHead();
-//     let row = thead.insertRow();
-//     for (let key of data) {
-//       let th = document.createElement("th");
-//       let text = document.createTextNode(key);
-//       th.appendChild(text);
-//       row.appendChild(th);
-//     }
-//   }
-  
-//   function generateTable(table, data) {
-//     for (let element of data) {
-//       let row = table.insertRow();
-//       for (key in element) {
-//         let cell = row.insertCell();
-//         let text = document.createTextNode(element[key]);
-//         cell.appendChild(text);
-//       }
-//     }
-//   }
-  
-//   let table = document.querySelector("table");
-//   let data = Object.keys(mountains[0]);
-//   generateTableHead(table, data);
-//   generateTable(table, mountains);
+console.log(cardRow);
 
 
-  function showAllCards() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:8088/list', true);
+function showAllCards() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'http://localhost:8088/list', true);
 
-    console.log(xhr);
+  console.log(xhr);
 
-    xhr.onload = function () {
-      if (this.status == 200) {
-          let allData = JSON.parse(this.responseText);
+  xhr.onload = function () {
+    if (this.status == 200) {
+        let allData = JSON.parse(this.responseText);
 
-          console.log(allData);
+        console.log(allData);
+        let map = new Map(Object.entries(allData));
 
-          var row = "";
-          for (var i = 0; i < allData.length; i++) {
-              row += '<div class="col-12 col-md-6 col-lg-3 mb-3"><div class="card">'
-                  + '<div class="card-body">'
-                  + '<h5 class="card-title" style="border-bottom: 1px solid gray">' + allData[i].name + '</h5>'
-                  + '<p class="card-text" onload="minimizeText()" id="words" style="height: 120px; overflow: hidden;">'
-                  + allData[i].id
-                  + '</p>'
-                  + '</div>'
+        console.log(`размер мапы ${map.size}`);
 
-                  + '</div></div>'
-              cardRow.innerHTML = row;
+    //     <table cellspacing="1" border="1" cellpadding="1">
+    //     <thead>
+    //     <tr>
+    //         <th>id</th>
+    //         <th>Название станции</th>
+    //         <th>IP-адрес</th>
+    //         <th>EbN0</th>
+    //         <th>Оптореле</th>
+    //         <th>Status</th>
+    //         <th>On/Off</th>
+    //     </tr>
+    //     </thead>
+    //     <tbody>
+    //     <th:block th:each="station : ${stations}">
+    //     <tr>
+    //         <td><span th:text="${station.id}">id</span></td>
+    //         <td><span th:text="${station.name}">Название станции</span></td>
+    //         <td><span th:text="${station.ip}">IP-адрес</span></td>
+    //         <td><span th:text="${station.value}">EbN0</span></td>
+    //         <td><span th:text="${station.rele}">Оптореле</span></td>
+    //         <td><span th:text="${station.status}">Status</span></td>
+    //         <td><button class="btn.${station.id}">off</button></td>
+    //     </tr>
+    //     </th:block>
+    //     </tbody>
+    // </table>
 
 
-          }
-      }
+
+
+        var row = `<table cellspacing="1" border="1" cellpadding="1">` + 
+                    `<thead>` +
+                      `<tr>` +
+                        `<th>id</th>` +
+                        `<th>Название станции</th>` +
+                        `<th>IP-адрес</th>` +
+                        `<th>EbN0</th>` +
+                        `<th>Оптореле</th>` +
+                        `<th>Status</th>` +
+                        `<th>On/Off</th>` +
+                      `</tr>`+
+                    `</thead>` +
+                    `<tbody>`;
+        for (let amount of map.values()) {
+          console.log(amount);
+
+          row += `<tr :key="${amount.id}">` +
+            `<td><span >${amount.id}</span></td>` +
+            `<td><span >${amount.name}</span></td>` +
+            `<td><span >${amount.ip}</span></td>` +
+            `<td><span >${amount.value}</span></td>` +
+            `<td><span >${amount.rele}</span></td>` +
+            `<td><span >${amount.status}</span></td>` +
+            `<td><button class="btn.${amount.id}" value="Wash">Wash</button></td>` +
+            `</tr>`;
+
+
+        };
+        row += `</tbody>` +
+                `</table>`;
+
+        cardRow.innerHTML = row;
+
     }
-    xhr.send();
+  }
+  xhr.send();
 
 };
+
 
 showAllCards();

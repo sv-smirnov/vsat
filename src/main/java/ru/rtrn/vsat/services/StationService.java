@@ -11,15 +11,16 @@ import ru.rtrn.vsat.entities.Vsat;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
 public class StationService {
 
-
-
     ArrayList<Station> stations;
+    HashMap<String, Station> mapStations;
+
     Logger log = LoggerFactory.getLogger(StationService.class);
 
     @Autowired
@@ -28,6 +29,7 @@ public class StationService {
 
     public StationService() throws IOException {
         stations = new ArrayList<>();
+        mapStations = new HashMap<>();
         loadStations();
         startUpdate();
     }
@@ -39,7 +41,9 @@ public class StationService {
         String line = reader.readLine();
         while (line != null) {
             String[] split = line.split(" ");
-            stations.add(new Station(split[0], split[1], split[2], " ", " ", " "));
+            Station station = new Station(split[0], split[1], split[2], " ", " ", " ");
+            stations.add(station);
+            mapStations.put(split[0], station);
             line = reader.readLine();
         }
     }
@@ -47,8 +51,8 @@ public class StationService {
     public void startUpdate() throws IOException {
         int n = 10;
         ExecutorService threadPool = Executors.newFixedThreadPool(n);
-        int dN = stations.size() / n;
-        int dNR = stations.size() % n;
+        int dN = mapStations.size() / n;
+        int dNR = mapStations.size() % n;
 
 //        for(int i = 0; i < n - 1; i++) {
 //            int start = i;
@@ -68,26 +72,27 @@ public class StationService {
             Device vsat = new Vsat();
             while (true) {
                 for (int i = start; i < stop; i++) {
-                    String val = snmpSevice.snmpGet(vsat, stations.get(i).getIp());
-                    stations.get(i).setValue(val);
+                    String n = String.valueOf(i);
+                    String val = snmpSevice.snmpGet(vsat, mapStations.get(n).getIp());
+                    mapStations.get(n).setValue(val);
                     if (snmpSevice.checkValue(val)) {
                         if (Double.parseDouble(val) >= 11) {
-                            stations.get(i).setStatus("Ok");
+                            setStationStatus(n, "Ok");
                         }
                         if (Double.parseDouble(val) < 11) {
-                            if (stations.get(i).getStatus().equals("Washing...")) {
+                            if (mapStations.get(n).getStatus().equals("Washing...") || mapStations.get(n).getStatus().equals("Sleep")) {
                                 continue;
                             }
-                            stations.get(i).setStatus("Low level");
+                            setStationStatus(n, "Low level");
 //  TODO для полноценной работы нужно убрать проверку "10.2.27.1"
-                            if (stations.get(i).getIp().equals("10.2.27.1")) {
-                                stations.get(i).setStatus("Washing...");
-                                startWashing(stations.get(i));
+                            if (mapStations.get(n).getIp().equals("10.2.27.1")) {
+                                setStationStatus(n, "Washing...");
+                                startWashing(mapStations.get(n));
                             }
                         }
                     } else {
-                        log.warn(stations.get(i).getIp() + " - " + val);
-                        stations.get(i).setStatus("Time Out");
+                        log.warn(mapStations.get(n).getIp() + " - " + val);
+                        setStationStatus(n, "Time Out");
                     }
                 }
             }
@@ -98,9 +103,18 @@ public class StationService {
         }
     }
 
+    public void setStationStatus(String i, String text) {
+        mapStations.get(i).setStatus(text);
+    }
+
     public ArrayList<Station> getStations() {
         return stations;
     }
+
+    public HashMap<String, Station> getMapStations() {
+        return mapStations;
+    }
+
 
     public void startWashing(Station alarmStation) throws InterruptedException {
         final SnmpSevice[] snmpSeviceSdk = new SnmpSevice[1];
@@ -108,17 +122,16 @@ public class StationService {
             try {
                 snmpSeviceSdk[0] = new SnmpSevice();
                 Device sdk = new Sdk();
-                String newIp = alarmStation.getIp().substring(0, alarmStation.getIp().length() - 1) + "2";
-                String releStatus = snmpSeviceSdk[0].snmpGet(sdk, newIp);
+                String releStatus = snmpSeviceSdk[0].snmpGet(sdk, getNewIp(alarmStation));
                 if (releStatus.equals("0")) {
 
-                    washing(alarmStation, snmpSeviceSdk[0], sdk, newIp, 1, ": start washing");
+                    washing(alarmStation, snmpSeviceSdk[0], sdk, 1, ": start washing");
                     Thread.sleep(20000);
-                    washing(alarmStation, snmpSeviceSdk[0], sdk, newIp, 0, ": stop washing");
+                    washing(alarmStation, snmpSeviceSdk[0], sdk, 0, ": stop washing");
                     Thread.sleep(120000);
 
                 } else {
-                    releStatus = snmpSeviceSdk[0].snmpSet(sdk, newIp, 0);
+                    releStatus = snmpSeviceSdk[0].snmpSet(sdk, getNewIp(alarmStation), 0);
                     alarmStation.setRele(parseReleStatus(releStatus));
                 }
             } catch (IOException | InterruptedException e) {
@@ -138,9 +151,26 @@ public class StationService {
         washProcess.join();
     }
 
-    private void washing(Station alarmStation, SnmpSevice snmpSeviceSdk, Device sdk, String newIp, int releValue, String logInfo) throws InterruptedException {
+    public void stopWashing(String number) throws IOException, InterruptedException {
+        if (mapStations.get(number).getStatus().equals("Sleep")) {
+            setStationStatus(number, "Ready");
+        } else {
+            Station alarmStation = mapStations.get(number);
+            SnmpSevice[] snmpSeviceSdk = new SnmpSevice[1];
+            snmpSeviceSdk[0] = new SnmpSevice();
+            Device sdk = new Sdk();
+            setStationStatus(alarmStation.getId(), "Sleep");
+            washing(alarmStation, snmpSeviceSdk[0], sdk, 0, ": stop washing");
+        }
+    }
+
+    private static String getNewIp(Station alarmStation) {
+        return alarmStation.getIp().substring(0, alarmStation.getIp().length() - 1) + "2";
+    }
+
+    private void washing(Station alarmStation, SnmpSevice snmpSeviceSdk, Device sdk, int releValue, String logInfo) throws InterruptedException {
         String releStatus;
-        releStatus = snmpSeviceSdk.snmpSet(sdk, newIp, releValue);
+        releStatus = snmpSeviceSdk.snmpSet(sdk, getNewIp(alarmStation), releValue);
         log.info(alarmStation.getIp() + " - " + alarmStation.getValue() + logInfo);
         alarmStation.setRele(parseReleStatus(releStatus));
     }

@@ -3,41 +3,85 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5" />
-    <link rel="stylesheet" link href="../static/style.css" th:href="@{/style.css}">
-    <script type="text/javascript" th:src="@{../static/actions.js}"></script>
+    <!-- <meta http-equiv="refresh" content="5" /> -->
     <title>Vsat</title>
+    <script src="@{../static/jquery-3.4.1.min.js}"></script>
+    <script src="@{../static/actions2.js}"></script>
+    <!-- <script>
+        let stations2 = [[${stations}]];
+    </script> -->
+    <link rel="stylesheet" type="text/css" href="@{../static/style.css}">
 </head>
 <body>
-<form name="station_form">
-    <div>
-        <table cellspacing="1" border="1" cellpadding="1">
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>Название станции</th>
-                <th>IP-адрес</th>
-                <th>EbN0</th>
-                <th>Оптореле</th>
-                <th>Status</th>
-                <th>On/Off</th>
-            </tr>
-            </thead>
-            <tbody>
-            <th:block th:each="station : ${stations}">
-            <tr>
-                <td><span th:text="${station.id}">id</span></td>
-                <td><span th:text="${station.name}">Название станции</span></td>
-                <td><span th:text="${station.ip}">IP-адрес</span></td>
-                <td><span th:text="${station.value}">EbN0</span></td>
-                <td><span th:text="${station.rele}">Оптореле</span></td>
-                <td><span th:text="${station.status}">Status</span></td>
-                <td><button class="btn.${station.id}">off</button></td>
-            </tr>
-            </th:block>
-            </tbody>
-        </table>
+    <!-- <div id="todo-form">
+        <form>
+            <h2>Добавление новой задачи</h2>
+            <label>Название задачи:</label>
+            <input type="text" name="name" value="">
+            <label>Описание:</label>
+            <input type="text" name="description" value="">
+            <hr>
+            <button id="save-todo">Сохранить</button>
+        </form>
     </div>
-    </form>
-</body>
+    <div id="todo-form-edit">
+        <form>
+            <h2>Задача</h2>
+            <label>Название задачи:</label>
+            <input type="text" name="name" value="">
+            <label>Описание:</label>
+            <input type="text" name="description" value="">
+            <hr>
+            <button id="save-todo-edit">Сохранить изменения</button>
+        </form>
+    </div> -->
+    
+    
+    
+    <h1>Список Дел</h1>
+    <button id="show-add-todo-form" class="addBtn">Новая задача</button>
+    <br><br>
+    <form name="station_form">
+        <div>
+            <table cellspacing="1" border="1" cellpadding="1">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Название станции</th>
+                    <th>IP-адрес</th>
+                    <th>EbN0</th>
+                    <th>Оптореле</th>
+                    <th>Status</th>
+                    <th>On/Off</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="station : ${stations}">
+                <tr>
+                    <td><span th:text="${station.id}">id</span></td>
+                    <td><span th:text="${station.name}">Название станции</span></td>
+                    <td><span th:text="${station.ip}">IP-адрес</span></td>
+                    <td><span th:text="${station.value}">EbN0</span></td>
+                    <td><span th:text="${station.rele}">Оптореле</span></td>
+                    <td><span th:text="${station.status}">Status</span></td>
+                    <td><button class="btn.${station.id}">off</button></td>
+                </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        </form>
+    
+    <!-- <ul id="myUL">
+        <li th:each="todo : ${stations}" style=" ">
+            <a href="#" class="todo-link" th:attr="data-id=${todo.id}" th:text="${todo.name}"></a><br>
+        </li>
+    </ul>
+    
+    <p th:text="${someParameter}"></p> -->
+
+    <script src="@{../static/actions.js}"></script>
+
+    
+    </body>
 </html>

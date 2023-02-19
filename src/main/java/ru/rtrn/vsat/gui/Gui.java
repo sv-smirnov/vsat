@@ -1,6 +1,8 @@
 package ru.rtrn.vsat.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import ru.rtrn.vsat.services.SnmpSevice;
 
 import java.awt.*;
@@ -8,6 +10,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+
+@Component
 public class Gui {
 
     @Autowired

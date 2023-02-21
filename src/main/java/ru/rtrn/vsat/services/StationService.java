@@ -54,16 +54,16 @@ public class StationService {
         int dN = mapStations.size() / n;
         int dNR = mapStations.size() % n;
 
-//        for(int i = 0; i < n - 1; i++) {
-//            int start = i;
-//            int stop = i + 1;
-//            threadPool.submit(() -> {
-//                updateValue(start*dN,stop*dN);
-//            });
-//        }
-//        threadPool.submit(() -> {
-//            updateValue((n-1)*dN,((n)*dN+dNR));
-//        });
+       for(int i = 0; i < n - 1; i++) {
+           int start = i;
+           int stop = i + 1;
+           threadPool.submit(() -> {
+               updateValue(start*dN,stop*dN);
+           });
+       }
+       threadPool.submit(() -> {
+           updateValue((n-1)*dN,((n)*dN+dNR));
+       });
     }
 
     private void updateValue(int start, int stop) {
@@ -72,6 +72,9 @@ public class StationService {
             Device vsat = new Vsat();
             while (true) {
                 for (int i = start; i < stop; i++) {
+                    if (i == 0) {
+                        i++;
+                    }
                     String n = String.valueOf(i);
                     String val = snmpSevice.snmpGet(vsat, mapStations.get(n).getIp());
                     mapStations.get(n).setValue(val);

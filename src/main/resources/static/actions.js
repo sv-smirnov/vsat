@@ -18,36 +18,6 @@ function showAllCards() {
 
         console.log(`размер мапы ${map.size}`);
 
-    //     <table cellspacing="1" border="1" cellpadding="1">
-    //     <thead>
-    //     <tr>
-    //         <th>id</th>
-    //         <th>Название станции</th>
-    //         <th>IP-адрес</th>
-    //         <th>EbN0</th>
-    //         <th>Оптореле</th>
-    //         <th>Status</th>
-    //         <th>On/Off</th>
-    //     </tr>
-    //     </thead>
-    //     <tbody>
-    //     <th:block th:each="station : ${stations}">
-    //     <tr>
-    //         <td><span th:text="${station.id}">id</span></td>
-    //         <td><span th:text="${station.name}">Название станции</span></td>
-    //         <td><span th:text="${station.ip}">IP-адрес</span></td>
-    //         <td><span th:text="${station.value}">EbN0</span></td>
-    //         <td><span th:text="${station.rele}">Оптореле</span></td>
-    //         <td><span th:text="${station.status}">Status</span></td>
-    //         <td><button class="btn.${station.id}">off</button></td>
-    //     </tr>
-    //     </th:block>
-    //     </tbody>
-    // </table>
-
-
-
-
         var row = `<table cellspacing="1" border="1" cellpadding="1">` + 
                     `<thead>` +
                       `<tr>` +
@@ -89,3 +59,7 @@ function showAllCards() {
 
 
 showAllCards();
+
+setInterval(function() {
+  showAllCards();
+}, 10000);

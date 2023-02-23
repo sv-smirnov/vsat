@@ -83,19 +83,24 @@ public class StationService {
                             setStationStatus(n, "Ok");
                         }
                         if (Double.parseDouble(val) < 11) {
-                            if (mapStations.get(n).getStatus().equals("Washing...") || mapStations.get(n).getStatus().equals("Sleep")) {
-                                continue;
-                            }
-                            setStationStatus(n, "Low level");
-//  TODO для полноценной работы нужно убрать проверку "10.2.27.1"
-                            if (mapStations.get(n).getIp().equals("10.2.27.1")) {
-                                setStationStatus(n, "Washing...");
-                                startWashing(mapStations.get(n));
+                            if (!mapStations.get(n).getStatus().equals("Washing...") || !mapStations.get(n).getStatus().equals("Sleep")) {
+                            
+                                setStationStatus(n, "Low level");
+    //  TODO для полноценной работы нужно убрать проверку "10.2.27.1"
+                                if (mapStations.get(n).getIp().equals("10.2.27.1")) {
+                                    setStationStatus(n, "Washing...");
+                                    startWashing(mapStations.get(n));
+                                }
                             }
                         }
                     } else {
-                        log.warn(mapStations.get(n).getIp() + " - " + val);
-                        setStationStatus(n, "Time Out");
+                        if (!mapStations.get(n).getStatus().equals("Sleep")) {
+                            log.warn(mapStations.get(n).getIp() + " - " + val);
+                            setStationStatus(n, "Time Out");
+                        }
+                            
+                        
+                        
                     }
                 }
             }

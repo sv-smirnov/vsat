@@ -1,23 +1,13 @@
 const cardRow = document.getElementById("Stations");
 
-console.log(cardRow);
-
-
 function showAllCards() {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'http://localhost:8088/list', true);
 
-  // console.log(xhr);
-
   xhr.onload = function () {
     if (this.status == 200) {
         let allData = JSON.parse(this.responseText);
-
-        // console.log(allData);
         let map = new Map(Object.entries(allData));
-
-        // console.log(`размер мапы ${map.size}`);
-
         var row = `<table cellspacing="1" border="1" cellpadding="1">` + 
                     `<thead>` +
                       `<tr>` +
@@ -32,7 +22,6 @@ function showAllCards() {
                     `</thead>` +
                     `<tbody>`;
         for (let amount of map.values()) {
-          // console.log(amount);
 
           row += `<tr :key="${amount.id}">` +
             `<td><span >${amount.id}</span></td>` +
@@ -58,7 +47,7 @@ function showAllCards() {
 };
 
 function toSleep(id, name) {
-  // alert(`Передатчик 1MUX ${name} успешно выключен`);
+  // alert(`Передатчик 1MUX ${name} приказал долго жить`);
 
   let formData = new FormData();
   formData.append(`name`, name);
@@ -68,10 +57,6 @@ function toSleep(id, name) {
   xhr.open('PUT', `http://localhost:8088/sleep`, true);
 
   xhr.send(id);
-
-  // xhr.onload = () => alert(xhr.response);
-
-
 
 }
 

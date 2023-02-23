@@ -7,7 +7,7 @@ function showAllCards() {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'http://localhost:8088/list', true);
 
-  console.log(xhr);
+  // console.log(xhr);
 
   xhr.onload = function () {
     if (this.status == 200) {
@@ -58,18 +58,18 @@ function showAllCards() {
 };
 
 function toSleep(id, name) {
-  alert(`Передатчик 1MUX ${name} успешно выключен`);
+  // alert(`Передатчик 1MUX ${name} успешно выключен`);
 
-  let formData = new FormData([form]);
+  let formData = new FormData();
   formData.append(`name`, name);
   formData.append(`id`, id);
 
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', `http://localhost:8088/${id}`);
+  xhr.open('PUT', `http://localhost:8088/sleep`, true);
 
-  xhr.send(formData);
+  xhr.send(id);
 
-  xhr.onload = () => alert(xhr.response);
+  // xhr.onload = () => alert(xhr.response);
 
 
 

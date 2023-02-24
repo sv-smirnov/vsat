@@ -1,4 +1,4 @@
-const cardRow = document.getElementById("Stations");
+const cardRow = document.getElementById("list");
 
 function showAllCards() {
   var xhr = new XMLHttpRequest();
@@ -8,7 +8,7 @@ function showAllCards() {
     if (this.status == 200) {
         let allData = JSON.parse(this.responseText);
         let map = new Map(Object.entries(allData));
-        var row = `<table cellspacing="1" border="1" cellpadding="1">` + 
+        var row = `<table class="table" cellspacing="1" border="1" cellpadding="1">` + 
                     `<thead>` +
                       `<tr>` +
                         `<th>id</th>` +
@@ -63,6 +63,6 @@ function toSleep(id, name) {
 
 showAllCards();
 
-setInterval(function() {
-  showAllCards();
-}, 10000);
+// setInterval(function() {
+//   showAllCards();
+// }, 10000);

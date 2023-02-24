@@ -62,7 +62,7 @@ public class StationService {
            });
        }
        threadPool.submit(() -> {
-           updateValue((n-1)*dN,((n)*dN+dNR));
+           updateValue((n-1)*dN,((n)*dN+dNR+1));
        });
     }
 

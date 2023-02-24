@@ -63,6 +63,6 @@ function toSleep(id, name) {
 
 showAllCards();
 
-// setInterval(function() {
-//   showAllCards();
-// }, 10000);
+setInterval(function() {
+  showAllCards();
+}, 10000);

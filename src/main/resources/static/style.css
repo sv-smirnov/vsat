@@ -3,6 +3,8 @@
 	border: none;
 	margin-bottom: 20px;
 	border-collapse: separate;
+  margin-left: auto;
+  margin-right: auto;
 }
 .table thead th {
 	font-weight: bold;
@@ -55,6 +57,7 @@
   display: grid;
   align-items: center;
   text-align: right;
+  border-radius: 20px;
 }
 
 .toolbar {
@@ -63,8 +66,10 @@
   padding-left: 1.6rem;
   display: flex;
   align-items: center;
-  text-align: right;
+  justify-content: center;
+  text-align: center;
   font-weight: bold;
+  border-radius: 20px;
 }
 
 .toolbar-text {

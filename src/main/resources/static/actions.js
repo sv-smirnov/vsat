@@ -17,7 +17,7 @@ function showAllCards() {
                         `<th>EbN0</th>` +
                         `<th>Оптореле</th>` +
                         `<th>Status</th>` +
-                        `<th>On/Off</th>` +
+                        `<th>Sleep On/Off</th>` +
                       `</tr>`+
                     `</thead>` +
                     `<tbody>`;
@@ -30,7 +30,23 @@ function showAllCards() {
             `<td><span >${amount.value}</span></td>` +
             `<td><span >${amount.rele}</span></td>` +
             `<td><span >${amount.status}</span></td>` +
-            `<td><button class="btn.${amount.id}" value="Sleep" onclick="toSleep('${amount.id}', '${amount.name}')">Sleep</button></td>` +
+            // `<td><button class="btn" value="Sleep" onclick="toSleep('${amount.id}', '${amount.name}')">Sleep</button>`;
+            `<td>`;
+          if (amount.status === 'Sleep') {
+            row += `<label class="toggle">` +
+              `<input class="toggle-checkbox" type="checkbox" checked>` +
+              `<div class="toggle-switch"></div>` +
+              `<span class="toggle-label"></span>` +
+              `</label>`;
+          } else {
+            row += `<label class="toggle">` +
+              `<input class="toggle-checkbox" type="checkbox">` +
+              `<div class="toggle-switch"></div>` +
+              `<span class="toggle-label"></span>` +
+              `</label>`;
+          }
+          
+          row += `</td>` +
             `</tr>`;
 
 
@@ -39,6 +55,17 @@ function showAllCards() {
                 `</table>`;
 
         cardRow.innerHTML = row;
+
+        const toggleCheckboxes = document.querySelectorAll('.toggle-checkbox');
+        toggleCheckboxes.forEach((checkbox, index) => {
+          checkbox.addEventListener('change', function() {
+            console.log(`Checkbox ${index + 1} is checked: ${this.checked}`);
+            var xhr = new XMLHttpRequest();
+            xhr.open('PUT', `http://localhost:8088/sleep`, true);
+
+            xhr.send(String(index + 1));
+          });
+        });
 
     }
   }

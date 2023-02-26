@@ -35,17 +35,28 @@ public class StationService {
     }
 
     public void loadStations() throws IOException {
-        File file = new File("Stations.txt");
-        FileReader fileReader = new FileReader(file);
-        BufferedReader reader = new BufferedReader(fileReader);
-        String line = reader.readLine();
-        while (line != null) {
-            String[] split = line.split(" ");
-            Station station = new Station(split[0], split[1], split[2], " ", " ", " ");
-            stations.add(station);
-            mapStations.put(split[0], station);
-            line = reader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader("Stations.txt"))) {
+            String line = reader.readLine();
+            while (line != null) {
+                String[] split = line.split(" ");
+                Station station = new Station(split[0], split[1], split[2], " ", " ", " ");
+                stations.add(station);
+                mapStations.put(split[0], station);
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        // FileReader fileReader = new FileReader(file);
+        // BufferedReader reader = new BufferedReader(fileReader);
+        // String line = reader.readLine();
+        // while (line != null) {
+        //     String[] split = line.split(" ");
+        //     Station station = new Station(split[0], split[1], split[2], " ", " ", " ");
+        //     stations.add(station);
+        //     mapStations.put(split[0], station);
+        //     line = reader.readLine();
+        // }
     }
 
     public void startUpdate() throws IOException {

@@ -59,6 +59,7 @@ function showAllCards() {
         const toggleCheckboxes = document.querySelectorAll('.toggle-checkbox');
         toggleCheckboxes.forEach((checkbox, index) => {
           checkbox.addEventListener('change', function() {
+            console.log(checkbox);
             console.log(`Checkbox ${index + 1} is checked: ${this.checked}`);
             var xhr = new XMLHttpRequest();
             xhr.open('PUT', `http://localhost:8088/sleep`, true);
@@ -66,6 +67,10 @@ function showAllCards() {
             xhr.send(String(index + 1));
           });
         });
+
+        function toggleSleep(amount) {
+          // делаем что-то с amount...
+        }
 
     }
   }

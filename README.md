@@ -1,4 +1,5 @@
 # vsat
 
 сервис проверки уровня сигнала антенн Vsat, в случае если уровень сигнала ниже порогового включается система очистки антенны от снега
-![image](https://user-images.githubusercontent.com/57046083/221288055-4dc3c441-8057-4255-b0f9-df19e0953d8d.png)
+![image](https://user-images.githubusercontent.com/57046083/221929140-bc2c2c3e-9a2b-44fe-b63a-602fe6f7b78b.png)
+

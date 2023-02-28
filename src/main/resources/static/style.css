@@ -1,145 +1,163 @@
-* {
-  box-sizing: border-box;
+.table {
+	width: 50%;
+	border: none;
+	margin-bottom: 20px;
+	border-collapse: separate;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 30px;
+}
+.table thead th {
+	font-weight: bold;
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	background: #4b4c4d;
+  color: #ddd;
+	font-size: 16px;
+	border-top: 1px solid #ddd;
+}
+.table tr th:first-child, .table tr td:first-child {
+	border-left: 1px solid #4b4c4d;
+}
+.table tr th:last-child, .table tr td:last-child {
+	border-right: 1px solid #4b4c4d;
+}
+.table thead tr th:first-child {
+	border-radius: 20px 0 0 0;
+}
+.table thead tr th:last-child {
+	border-radius: 0 20px 0 0;
+}
+.table tbody td {
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	font-size: 16px;
+	vertical-align: top;
+}
+.table tbody tr:nth-child(even) {
+	background: #e0e2df;
+}
+.table tbody tr:last-child td{
+	border-bottom: 1px solid #994242;
+}
+.table tbody tr:last-child td:first-child {
+	border-radius: 0 0 0 20px;
+}
+.table tbody tr:last-child td:last-child {
+	border-radius: 0 0 20px 0;
 }
 
-@font-face {
-  font-family: 'Muller';
-  src: url('../fonts/MullerLight.woff2'),
-    url('../fonts/MullerLight.woff');
-  font-display: swap;
-  font-weight: 300;
+
+
+.footer-div {
+  height: 4.4rem;
+  background-color: #4b4c4d;
+  padding-right: 1.6rem;
+  display: grid;
+  align-items: center;
+  text-align: right;
+  border-radius: 20px;
 }
 
-@font-face {
-  font-family: 'Muller';
-  src: url('../fonts/MullerRegular.woff2'),
-    url('../fonts/MullerRegular.woff');
-  font-display: swap;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Muller';
-  src: url('../fonts/MullerMedium.woff2'),
-    url('../fonts/MullerMedium.woff');
-  font-display: swap;
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Muller';
-  src: url('../fonts/MullerBold.woff2'),
-    url('../fonts/MullerBold.woff');
-  font-display: swap;
-  font-weight: 700;
-}
-:root {
-  --accent-color: #cc9933;
-  --accent-active: #a47312;
-}
-
-body {
-  min-width: 1170px;
-  font-family: 'Muller', sans-serif;
-  background-color: #f1f1f1;
-  font-size: 11px;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-img {
-  max-width: 100%;
-}
-.product-box{
-              display: flex;
-                flex-wrap: wrap;
-              justify-content: space-between;
-
-}
-.product{
-              box-sizing: border-box;
-              background: #FFFFFF;
-              border-radius: 10px;
-              border: #000000;
-              border-style: groove;
-              display: flex;
-              flex-direction: row;
-              padding-top: 10px;
-              padding-bottom: 10px;
-              margin-right:auto;
-              box-shadow: 0px 0px 30px 0px rgba(24, 0, 101, 0.7);
-}
-.top-info-heading {
-              font-size: 32px;
-              color: #1F3F68;
-              width: 510px;
-              font-weight: 300;
-              line-height: 74px;
-              letter-spacing: 0.04em;
-              margin-bottom: 32px;
-}
-.product-description{
-              font-size: 20px;
-              color: #1F3F68;
-              letter-spacing: 0.05em;
-              margin-bottom: 10px;
-}
-.buttons{
-              display: flex;
-              flex-direction: row;
-              margin-left: auto;
-}
-.article__btn {
-  border: 1px solid currentColor;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 16px;
-  line-height: 16px;
-  color: #7133cc;;
-  background-color: transparent;
-  cursor: pointer;
-  transition-property: color, background-color;
-  transition-duration: 0.3s;
-}
-
-.article__btn:focus {
-  outline: none;
-  color: #fff;
-  background-color: #7133cc;;
-}
-
-.article__btn:hover {
-  color: #fff;
-  background-color: #7133cc;;
-}
-
-.article__btn:active {
-  color: #fff;
-  background-color: #7133cc;
-}
-
-.container {
-  max-width: 1200px;
-  padding: 0 15px;
-  margin: 0 auto;
-}
-.placement__list {
+.toolbar {
+  height: 4.4rem;
+  background-color: #4b4c4d;
+  padding-left: 1.6rem;
   display: flex;
-  flex-wrap: wrap;
-}
-.services__title {
-  display: inline-block;
-  margin: 0;
-  padding-right: 20px;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 200%;
-  color: var(--accent-color);
-  background-image: url("../img/right-angle-2.svg");
-  background-repeat: no-repeat;
-  background-position: right center;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 20px;
 }
 
+.toolbar-text {
+  color: #e9e3e3;  
+  font-size: 1.7rem;
+}
+
+.footer {
+  padding: 30px;
+}
+
+.footer-text {
+  color: #e9e3e3;  
+}
+
+.btn {
+  background-color: #4b4c4d; /* цвет фона */
+  border: none; /* убираем границу */
+  color: white; /* цвет текста */
+  padding: 8px 15px; /* отступы внутри кнопки */
+  text-align: center; /* выравнивание текста по центру */
+  text-decoration: none; /* убираем подчеркивание */
+  display: inline-block; /* устанавливаем блочный элемент */
+  font-size: 16px; /* размер шрифта */
+  margin: 10px 2px; /* отступы вокруг кнопки */
+  cursor: pointer; /* курсор при наведении на кнопку */
+  border-radius: 20px; /* радиус границы */
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2); /* тень кнопки */
+}
+
+.btn:hover {
+  background-color: #3c98ee; /* цвет фона при наведении */
+}
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #4b4c4d;
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.toggle-checkbox:checked + .toggle-switch {
+  background: #3c98ee;
+}
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 30px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+.toggle-switch-on {
+  background: #fff;
+  box-shadow: inset 0 0 10px 0 #999999; /* тень */
+}
